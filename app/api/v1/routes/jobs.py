@@ -90,6 +90,7 @@ def create_job(
 ):
     db_job = Job(**job.model_dump())
     db.add(db_job)
+    db.flush()
     
     log_activity(
         db=db,
@@ -100,6 +101,8 @@ def create_job(
         job_id=db_job.id
     )
     
+    db.commit()
+    db.refresh(db_job)
     return db_job
 
 @router.post("/{job_id}/status", response_model=JobResponse)
@@ -146,4 +149,6 @@ def update_job_status(
         job_id=db_job.id
     )
     
+    db.commit()
+    db.refresh(db_job)
     return db_job

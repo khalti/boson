@@ -17,10 +17,12 @@ SessionLocal = sessionmaker(autoflush=True, bind=engine)
 
 Base = declarative_base()
 
+import uuid
+
 class BaseModelDB(Base):
     __abstract__ = True
     
-    id = Column(String, primary_key=True, default=func.gen_random_uuid)
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     created_on = Column(DateTime, default=datetime.now)
     updated_on = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 

@@ -64,6 +64,8 @@ def update_role(
         user_email=current_user.email
     )
     
+    db.commit()
+    db.refresh(target_user)
     return target_user
 
 @router.post("/create", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
@@ -102,6 +104,8 @@ def create_member(
         user_email=current_user.email
     )
     
+    db.commit()
+    db.refresh(new_user)
     return new_user
 
 @router.post("/{user_id}/reset-password")
@@ -127,5 +131,6 @@ def reset_member_password(
         user_email=current_user.email
     )
     
+    db.commit()
     return {"status": "success"}
 

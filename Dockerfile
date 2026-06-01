@@ -9,6 +9,7 @@ WORKDIR /app
 
 # Install Python requirements
 COPY app/requirements.txt ./app/
+RUN pip install --no-cache-dir --break-system-packages --upgrade pip setuptools wheel
 RUN pip install --no-cache-dir --break-system-packages -r app/requirements.txt
 
 # Install customer page dependencies
