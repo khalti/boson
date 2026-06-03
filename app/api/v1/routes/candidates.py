@@ -140,7 +140,6 @@ async def evaluate_candidate_background(
             f"Background evaluation successfully completed for candidate {candidate.name}"
         )
     except Exception as e:
-        db.rollback()
         logger.error(
             f"Failed to evaluate candidate {candidate_id} in background: {str(e)}"
         )
@@ -315,7 +314,6 @@ async def submit_application(
         candidate_id=db_candidate.id,
     )
 
-    db.commit()
     db.refresh(db_candidate)
     return db_candidate
 
@@ -536,7 +534,7 @@ def update_candidate_stage(
         candidate_id=candidate.id,
     )
 
-    db.commit()
+    db.flush()
     db.refresh(candidate)
 
     # Flatten fields for response
@@ -580,7 +578,7 @@ def add_candidate_note(
         candidate_id=candidate.id,
     )
 
-    db.commit()
+    db.flush()
     db.refresh(candidate)
 
     base_url = settings.BASE_URL

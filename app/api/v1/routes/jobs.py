@@ -101,7 +101,6 @@ def create_job(
         job_id=db_job.id
     )
     
-    db.commit()
     db.refresh(db_job)
     return db_job
 
@@ -149,6 +148,6 @@ def update_job_status(
         job_id=db_job.id
     )
     
-    db.commit()
+    db.flush()
     db.refresh(db_job)
     return db_job
