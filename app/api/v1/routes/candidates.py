@@ -140,7 +140,6 @@ async def evaluate_candidate_background(
             f"Background evaluation successfully completed for candidate {candidate.name}"
         )
     except Exception as e:
-        db.rollback()
         logger.error(
             f"Failed to evaluate candidate {candidate_id} in background: {str(e)}"
         )
@@ -315,6 +314,7 @@ async def submit_application(
         candidate_id=db_candidate.id,
     )
 
+    db.refresh(db_candidate)
     return db_candidate
 
 
@@ -524,7 +524,6 @@ def update_candidate_stage(
         past.append(old_stage)
         candidate.pastStages = past
 
-    # Use the centralized activity logger
     log_activity(
         db=db,
         action_type="candidate_stage_updated",
@@ -534,6 +533,9 @@ def update_candidate_stage(
         job_id=candidate.jobId,
         candidate_id=candidate.id,
     )
+
+    db.flush()
+    db.refresh(candidate)
 
     # Flatten fields for response
     # ... existing flatten logic handled in response_model ?
@@ -575,6 +577,9 @@ def add_candidate_note(
         job_id=candidate.jobId,
         candidate_id=candidate.id,
     )
+
+    db.flush()
+    db.refresh(candidate)
 
     base_url = settings.BASE_URL
     if candidate.cv_filelink and not candidate.cvUrl:
