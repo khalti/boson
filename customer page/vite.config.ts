@@ -15,6 +15,7 @@ export default defineConfig({
   vite: {
     server: {
       hmr: false,
+      allowedHosts: ["careers.khalti.com"],
       watch: {
         ignored: ["**/*"],
       },
