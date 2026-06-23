@@ -34,6 +34,7 @@ export function AppShell() {
   const navigate = useNavigate();
   const { theme, toggle } = useTheme();
   const { user, loading, isAuthenticated, isAdmin, logout, refresh } = useAuth();
+  const { user, loading, isAuthenticated, isAdmin, logout } = useAuth();
   const openCreateJob = useAts((s) => s.openCreateJob);
 
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
@@ -222,6 +223,18 @@ export function AppShell() {
 
         <main className="flex-1 px-4 py-6 md:px-8 md:py-8">
           <Outlet />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.15, ease: "easeInOut" }}
+              className="w-full h-full"
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
 

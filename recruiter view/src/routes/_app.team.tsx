@@ -77,6 +77,31 @@ function TeamPage() {
     return () => {
       controller.abort();
     };
+  const fetchTeam = async () => {
+    try {
+      const apiBase = API_BASE;
+      const headers: Record<string, string> = {};
+      const token = getToken();
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+      const res = await fetch(`${apiBase}/team/fetch`, {
+        headers,
+        credentials: "include"
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setTeam(data);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isAdmin) fetchTeam();
   }, [isAdmin]);
 
   if (!user) {
