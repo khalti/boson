@@ -100,7 +100,6 @@ function Dashboard() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
-            Welcome back, {user?.name || user?.email?.split("@")[0]}
             Welcome back, {user?.name || user?.email?.split("@")[0] || "Recruiter"}
           </h1>
           <p className="text-sm text-muted-foreground">
