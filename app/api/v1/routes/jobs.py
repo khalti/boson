@@ -90,7 +90,7 @@ def create_job(
 ):
     db_job = Job(**job.model_dump())
     db.add(db_job)
-    db.flush()
+    db.commit()
     
     log_activity(
         db=db,
@@ -148,6 +148,6 @@ def update_job_status(
         job_id=db_job.id
     )
     
-    db.flush()
+    db.commit()
     db.refresh(db_job)
     return db_job

@@ -69,6 +69,20 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+function GlobalPendingComponent() {
+  return (
+    <div className="flex min-h-[60vh] flex-col items-center justify-center bg-background px-4">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="relative flex h-12 w-12 items-center justify-center">
+          <div className="absolute h-12 w-12 animate-ping rounded-full bg-primary/20 opacity-75"></div>
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+        </div>
+        <p className="text-sm font-medium text-muted-foreground animate-pulse">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
@@ -98,6 +112,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
+  pendingComponent: GlobalPendingComponent,
+  pendingMs: 100,
+  pendingMinMs: 300,
 });
 
 function RootShell({ children }: { children: React.ReactNode }) {

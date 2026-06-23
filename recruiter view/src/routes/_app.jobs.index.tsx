@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useAts } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 
-export const Route = createFileRoute("/_app/jobs")({ component: JobsPage });
+export const Route = createFileRoute("/_app/jobs/")({ component: JobsPage });
 
 const tabs = ["Active", "Closed"] as const;
 

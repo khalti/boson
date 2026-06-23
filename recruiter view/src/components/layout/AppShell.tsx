@@ -33,7 +33,7 @@ export function AppShell() {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, toggle } = useTheme();
-  const { user, loading, isAuthenticated, isAdmin, logout } = useAuth();
+  const { user, loading, isAuthenticated, isAdmin, logout, refresh } = useAuth();
   const openCreateJob = useAts((s) => s.openCreateJob);
 
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
@@ -44,6 +44,13 @@ export function AppShell() {
   useEffect(() => {
     if (mounted && !loading && !isAuthenticated) navigate({ to: "/login" });
   }, [mounted, loading, isAuthenticated, navigate]);
+
+  // Refresh user session on every route navigation
+  useEffect(() => {
+    if (mounted && isAuthenticated) {
+      refresh();
+    }
+  }, [location.pathname]);
 
   const isActive = (to: string, exact?: boolean) =>
     exact ? location.pathname === to : location.pathname.startsWith(to);
@@ -214,18 +221,7 @@ export function AppShell() {
         </header>
 
         <main className="flex-1 px-4 py-6 md:px-8 md:py-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={location.pathname}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.15, ease: "easeInOut" }}
-              className="w-full h-full"
-            >
-              <Outlet />
-            </motion.div>
-          </AnimatePresence>
+          <Outlet />
         </main>
       </div>
 
