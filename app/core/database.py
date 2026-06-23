@@ -17,6 +17,12 @@ SessionLocal = sessionmaker(autoflush=True, bind=engine)
 
 Base = declarative_base()
 
+import uuid
+
+class BaseModelDB(Base):
+    __abstract__ = True
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
 class BaseModelDB(Base):
     __abstract__ = True
     

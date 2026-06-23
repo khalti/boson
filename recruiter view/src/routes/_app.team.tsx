@@ -39,6 +39,44 @@ function TeamPage() {
     memberEmail: string;
   } | null>(null);
 
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchTeam = async () => {
+      try {
+        const apiBase = API_BASE;
+        const headers: Record<string, string> = {};
+        const token = getToken();
+        if (token) {
+          headers["Authorization"] = `Bearer ${token}`;
+        }
+        const res = await fetch(`${apiBase}/team/fetch`, {
+          headers,
+          credentials: "include",
+          signal: controller.signal
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setTeam(data);
+        }
+      } catch (e: any) {
+        if (e.name !== "AbortError") {
+          console.error(e);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    if (isAdmin) {
+      fetchTeam();
+    }
+
+    return () => {
+      controller.abort();
+    };
   const fetchTeam = async () => {
     try {
       const apiBase = API_BASE;

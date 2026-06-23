@@ -135,6 +135,7 @@ async def evaluate_candidate_background(
             job_id=job.id,
             candidate_id=candidate.id,
         )
+        db.commit()
         db.flush()
         logger.info(
             f"Background evaluation successfully completed for candidate {candidate.name}"
@@ -315,6 +316,8 @@ async def submit_application(
         candidate_id=db_candidate.id,
     )
 
+    db.commit()
+    db.refresh(db_candidate)
     return db_candidate
 
 
@@ -535,6 +538,9 @@ def update_candidate_stage(
         candidate_id=candidate.id,
     )
 
+    db.commit()
+    db.refresh(candidate)
+
     # Flatten fields for response
     # ... existing flatten logic handled in response_model ?
     # Actually just set basic fields if missing
@@ -575,6 +581,9 @@ def add_candidate_note(
         job_id=candidate.jobId,
         candidate_id=candidate.id,
     )
+
+    db.commit()
+    db.refresh(candidate)
 
     base_url = settings.BASE_URL
     if candidate.cv_filelink and not candidate.cvUrl:
