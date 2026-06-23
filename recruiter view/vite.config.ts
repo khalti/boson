@@ -19,6 +19,12 @@ export default defineConfig({
       watch: {
         ignored: ["**/*"],
       },
+      proxy: {
+        "/api": {
+          target: "http://khalti-careers-api:8000",
+          changeOrigin: true,
+        },
+      },
     },
   },
 });
