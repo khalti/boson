@@ -106,6 +106,7 @@ export function useAuth() {
       setToken(null);
       setUser(null);
     },
+    refresh: fetchUser,
   };
 }
 

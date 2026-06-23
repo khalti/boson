@@ -100,7 +100,7 @@ function Dashboard() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
-            Welcome back, {user?.name || user?.email?.split("@")[0] || "Recruiter"}
+            Welcome back, {user?.name || user?.email?.split("@")[0]}
           </h1>
           <p className="text-sm text-muted-foreground">
             Here's what's happening across your pipelines today.

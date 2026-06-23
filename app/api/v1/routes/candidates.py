@@ -135,7 +135,7 @@ async def evaluate_candidate_background(
             job_id=job.id,
             candidate_id=candidate.id,
         )
-        db.flush()
+        db.commit()
         logger.info(
             f"Background evaluation successfully completed for candidate {candidate.name}"
         )
@@ -314,6 +314,7 @@ async def submit_application(
         candidate_id=db_candidate.id,
     )
 
+    db.commit()
     db.refresh(db_candidate)
     return db_candidate
 
@@ -534,7 +535,7 @@ def update_candidate_stage(
         candidate_id=candidate.id,
     )
 
-    db.flush()
+    db.commit()
     db.refresh(candidate)
 
     # Flatten fields for response
@@ -578,7 +579,7 @@ def add_candidate_note(
         candidate_id=candidate.id,
     )
 
-    db.flush()
+    db.commit()
     db.refresh(candidate)
 
     base_url = settings.BASE_URL

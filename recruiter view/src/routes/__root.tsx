@@ -10,6 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { ThemeProvider } from "@/components/theme-provider";
+import { RouterProgressBar } from "@/components/layout/RouterProgressBar";
 
 function NotFoundComponent() {
   return (
@@ -99,6 +100,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
+        <RouterProgressBar />
         <Outlet />
       </ThemeProvider>
     </QueryClientProvider>

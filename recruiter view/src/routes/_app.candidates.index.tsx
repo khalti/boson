@@ -11,7 +11,7 @@ import { api } from "@/lib/api";
 
 type CandidatesSearch = { jobId?: string };
 
-export const Route = createFileRoute("/_app/candidates")({
+export const Route = createFileRoute("/_app/candidates/")({
   component: CandidatesPage,
   validateSearch: (s: Record<string, unknown>): CandidatesSearch => ({
     jobId: typeof s.jobId === "string" ? s.jobId : undefined,

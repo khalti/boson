@@ -64,7 +64,7 @@ def update_role(
         user_email=current_user.email
     )
     
-    db.flush()
+    db.commit()
     db.refresh(target_user)
     return target_user
 
@@ -105,7 +105,7 @@ def create_member(
         user_email=current_user.email
     )
     
-    db.flush()
+    db.commit()
     db.refresh(new_user)
     return new_user
 
@@ -132,6 +132,6 @@ def reset_member_password(
         user_email=current_user.email
     )
     
-    db.flush()
+    db.commit()
     return {"status": "success"}
 
