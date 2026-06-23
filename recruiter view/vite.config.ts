@@ -16,6 +16,12 @@ export default defineConfig({
     server: {
       hmr: false,
       allowedHosts: ["careers.khalti.com", "recruiters.khalti.com"],
+      proxy: {
+        "/api": {
+          target: "http://khalti-careers-api:8000",
+          changeOrigin: true,
+        },
+      },
       watch: {
         ignored: ["**/*"],
       },
