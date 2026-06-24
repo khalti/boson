@@ -21,7 +21,11 @@ export default defineConfig({
       },
       proxy: {
         "/api": {
-          target: "http://khalti-careers-api:8000",
+          target: process.env.API_INTERNAL_URL,
+          changeOrigin: true,
+        },
+        "/static": {
+          target: process.env.API_INTERNAL_URL,
           changeOrigin: true,
         },
       },
