@@ -93,7 +93,7 @@ function ActivityLogsPage() {
     setLoading(true);
     try {
       const apiBase = API_BASE;
-      const url = new URL(`${apiBase}/activity-logs/fetch`);
+      const url = new URL(`${apiBase}/activity-logs/fetch`, window.location.origin);
       url.searchParams.append("page", p.toString());
       url.searchParams.append("size", s.toString());
       if (type && type !== "all") {
