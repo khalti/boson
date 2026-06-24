@@ -14,7 +14,11 @@ export default defineConfig({
   },
   vite: {
     server: {
-      hmr: false,
+      hmr: {
+        host: "careers.khalti.com",
+        protocol: "wss",
+        clientPort: 443,
+      },
       allowedHosts: ["careers.khalti.com", "recruiters.khalti.com"],
       watch: {
         ignored: ["**/*"],
