@@ -136,10 +136,12 @@ async def evaluate_candidate_background(
             candidate_id=candidate.id,
         )
         db.commit()
+        db.flush()
         logger.info(
             f"Background evaluation successfully completed for candidate {candidate.name}"
         )
     except Exception as e:
+        db.rollback()
         logger.error(
             f"Failed to evaluate candidate {candidate_id} in background: {str(e)}"
         )
@@ -525,6 +527,7 @@ def update_candidate_stage(
         past.append(old_stage)
         candidate.pastStages = past
 
+    # Use the centralized activity logger
     log_activity(
         db=db,
         action_type="candidate_stage_updated",

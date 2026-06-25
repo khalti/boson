@@ -14,6 +14,7 @@ services:
       - NODE_ENV=production
       - VITE_API_URL=${VITE_API_URL}
       - API_URL=${API_URL}
+      - API_INTERNAL_URL=${API_INTERNAL_URL}
     networks:
       - frontend-network
 
@@ -32,9 +33,10 @@ services:
       - NODE_ENV=production
       - VITE_API_URL=${VITE_API_URL}
       - API_URL=${API_URL}
+      - API_INTERNAL_URL=${API_INTERNAL_URL}
     networks:
       - frontend-network
-     
+
   db:
     image: postgres:15-alpine
     container_name: khalti-careers-db

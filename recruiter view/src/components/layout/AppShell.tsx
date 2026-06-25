@@ -196,7 +196,18 @@ export function AppShell() {
       {/* Main */}
       <div className="flex min-w-0 flex-1 flex-col">
         <main className="flex-1 px-4 py-6 md:px-8 md:py-8">
-          <Outlet />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.15, ease: "easeInOut" }}
+              className="w-full h-full"
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
 

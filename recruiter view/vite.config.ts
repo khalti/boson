@@ -5,12 +5,30 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  plugins: [
-    tanstackStart(),
-    react(),
-    tsConfigPaths({
-      projects: ["./tsconfig.json"],
-    }),
-    tailwindcss(),
-  ],
+  tanstackStart: {
+    server: { entry: "server" },
+  },
+  vite: {
+    server: {
+      hmr: {
+        host: "recruiters.khalti.com",
+        protocol: "wss",
+        clientPort: 443,
+      },
+      allowedHosts: ["careers.khalti.com", "recruiters.khalti.com"],
+      watch: {
+        ignored: ["**/*"],
+      },
+      proxy: {
+        "/api": {
+          target: process.env.API_INTERNAL_URL,
+          changeOrigin: true,
+        },
+        "/static": {
+          target: process.env.API_INTERNAL_URL,
+          changeOrigin: true,
+        },
+      },
+    },
+  },
 });
