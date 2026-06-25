@@ -2,11 +2,10 @@ import { Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Briefcase, Users, KanbanSquare, BarChart3, Shield,
-  Search, Bell, Sun, Moon, LogOut, Plus, ChevronDown, FileSpreadsheet,
+  LogOut, Plus, FileSpreadsheet,
   History, KeyRound, FileUp,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useTheme } from "@/components/theme-provider";
 import { Avatar } from "@/components/ats/Avatar";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
@@ -32,7 +31,6 @@ function KhaltiLogo() {
 export function AppShell() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { theme, toggle } = useTheme();
   const { user, loading, isAuthenticated, isAdmin, logout, refresh } = useAuth();
   const openCreateJob = useAts((s) => s.openCreateJob);
 
@@ -56,6 +54,14 @@ export function AppShell() {
     exact ? location.pathname === to : location.pathname.startsWith(to);
 
   const showUploadCv = user?.role !== "VIEWER";
+
+  if (!mounted || loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    );
+  }
 
   const section1: NavItem[] = [
     { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
@@ -189,37 +195,6 @@ export function AppShell() {
 
       {/* Main */}
       <div className="flex min-w-0 flex-1 flex-col">
-        {/* Topbar */}
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur md:px-6">
-          <div className="relative max-w-md flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
-              placeholder="Search candidates, jobs, skills…"
-              className="h-9 w-full rounded-lg border border-border bg-muted/40 pl-9 pr-3 text-sm outline-none transition focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/15"
-            />
-            <kbd className="pointer-events-none absolute right-2 top-1/2 hidden -translate-y-1/2 rounded border border-border bg-background px-1.5 py-0.5 text-[10px] text-muted-foreground sm:block">
-              ⌘K
-            </kbd>
-          </div>
-          <div className="flex items-center gap-1">
-            <button
-              onClick={toggle}
-              className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-background text-muted-foreground transition hover:text-foreground"
-              title="Toggle theme"
-            >
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </button>
-            <button className="relative grid h-9 w-9 place-items-center rounded-lg border border-border bg-background text-muted-foreground transition hover:text-foreground">
-              <Bell className="h-4 w-4" />
-              <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
-            </button>
-            <button className="ml-1 flex h-9 items-center gap-1.5 rounded-lg border border-border bg-background px-2 text-sm text-foreground hover:bg-muted">
-              <Avatar name="Anusha Karki" size={22} />
-              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
-            </button>
-          </div>
-        </header>
-
         <main className="flex-1 px-4 py-6 md:px-8 md:py-8">
           <AnimatePresence mode="wait">
             <motion.div
