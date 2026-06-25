@@ -148,7 +148,7 @@ const emptySchema: CandidateSchema = {
     total_experience_years: 0,
     notice_period_days: 0,
     preferred_locations: [],
-    authorized_to_work_in_nepal: true,
+    authorized_to_work_in_nepal: null as any,
     expected_salary: ""
   },
   skills: [],
@@ -362,8 +362,14 @@ function ApplyPage() {
         education: (parsedData.education || []).map((edu: any) => ({ ...edu, _key: generateId() })),
         projects: (parsedData.projects || []).map((proj: any) => ({ ...proj, _key: generateId() })),
         certifications: (parsedData.certifications || []).map((cert: any) => ({ ...cert, _key: generateId() })),
-        achievements: (parsedData.achievements || []).map((ach: string) => ({ _key: generateId(), value: ach })),
-        awards: (parsedData.awards || []).map((aw: string) => ({ _key: generateId(), value: aw })),
+        achievements: (parsedData.achievements || []).map((ach: any) => ({ 
+          _key: generateId(), 
+          value: typeof ach === 'string' ? ach : (ach.title || ach.name || ach.achievement || JSON.stringify(ach))
+        })),
+        awards: (parsedData.awards || []).map((aw: any) => ({ 
+          _key: generateId(), 
+          value: typeof aw === 'string' ? aw : (aw.title || aw.name || aw.award || JSON.stringify(aw))
+        })),
         custom_fields: {
           ...emptySchema.custom_fields,
           ...(parsedData.custom_fields || {}),
@@ -1068,6 +1074,44 @@ function ApplyPage() {
           )}
 
           <form onSubmit={handleFormSubmit} className="mx-auto w-full space-y-6">
+            <Card className="rounded-2xl border-khalti/30 p-6 sm:p-8 bg-khalti/5">
+              <div className="space-y-4">
+                <Label className="text-base font-semibold">
+                  Are you legally authorized to work in Nepal? <span className="text-khalti">*</span>
+                </Label>
+                <RadioGroup
+                  value={formData.professional_summary.authorized_to_work_in_nepal === null ? "" : (formData.professional_summary.authorized_to_work_in_nepal ? "yes" : "no")}
+                  onValueChange={(v) => updateSummary("authorized_to_work_in_nepal", v === "yes")}
+                  className="flex flex-col sm:flex-row gap-3"
+                >
+                  {[
+                    { value: "yes", label: "Yes, I am authorized" },
+                    { value: "no", label: "No, I am not authorized" },
+                  ].map((o) => (
+                    <Label
+                      key={o.value}
+                      htmlFor={`auth-${o.value}`}
+                      className={`flex flex-1 cursor-pointer items-center gap-3 rounded-xl border px-5 py-4 text-sm font-medium transition-colors ${
+                        formData.professional_summary.authorized_to_work_in_nepal === (o.value === "yes")
+                          ? "border-khalti bg-white text-foreground shadow-sm ring-1 ring-khalti/50"
+                          : "border-border bg-white hover:border-khalti/40"
+                      }`}
+                    >
+                      <RadioGroupItem id={`auth-${o.value}`} value={o.value} />
+                      {o.label}
+                    </Label>
+                  ))}
+                </RadioGroup>
+                {formData.professional_summary.authorized_to_work_in_nepal === false && (
+                  <div className="mt-4 rounded-xl border border-destructive/20 bg-destructive/10 p-4 text-sm font-medium text-destructive">
+                    ⚠️ You must be legally authorized to work in Nepal to submit an application.
+                  </div>
+                )}
+              </div>
+            </Card>
+
+            {formData.professional_summary.authorized_to_work_in_nepal === true && (
+              <>
             {/* Personal Info Section */}
             <Card className="rounded-2xl border-border/70 p-6 sm:p-8">
               <SectionHeader step="Section 1" title="Personal Information" />
@@ -1237,38 +1281,6 @@ function ApplyPage() {
                   />
                 </div>
 
-                <div className="space-y-2 border-t pt-4">
-                  <Label className="text-sm font-medium">
-                    Are you legally authorized to work in Nepal? <span className="text-khalti">*</span>
-                  </Label>
-                  <RadioGroup
-                    value={formData.professional_summary.authorized_to_work_in_nepal ? "yes" : "no"}
-                    onValueChange={(v) => updateSummary("authorized_to_work_in_nepal", v === "yes")}
-                    className="flex gap-3"
-                  >
-                    {[
-                      { value: "yes", label: "Yes" },
-                      { value: "no", label: "No" },
-                    ].map((o) => (
-                      <Label
-                        key={o.value}
-                        htmlFor={`auth-${o.value}`}
-                        className={`flex flex-1 cursor-pointer items-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium transition-colors ${(formData.professional_summary.authorized_to_work_in_nepal ? "yes" : "no") === o.value
-                          ? "border-khalti bg-khalti/5 text-foreground"
-                          : "border-border bg-white hover:border-khalti/40"
-                          }`}
-                      >
-                        <RadioGroupItem id={`auth-${o.value}`} value={o.value} />
-                        {o.label}
-                      </Label>
-                    ))}
-                  </RadioGroup>
-                  {!formData.professional_summary.authorized_to_work_in_nepal && (
-                    <p className="text-xs text-destructive mt-1.5 font-medium">
-                      ⚠️ You must be legally authorized to work in Nepal to submit your application.
-                    </p>
-                  )}
-                </div>
               </div>
             </Card>
 
@@ -1834,6 +1846,8 @@ function ApplyPage() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
+              </>
+            )}
           </form>
         </div>
       </section>

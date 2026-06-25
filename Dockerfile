@@ -14,14 +14,18 @@ RUN pip install --no-cache-dir --break-system-packages -r app/requirements.txt
 
 # Install customer page dependencies
 COPY "customer page/package.json" "customer page/bun.lock" "customer page/bunfig.toml" "./customer page/"
-RUN cd "customer page" && bun install --frozen-lockfile
+RUN cd "customer page" && bun install
 
 # Install recruiter view dependencies
 COPY "recruiter view/package.json" "recruiter view/bun.lock" "recruiter view/bunfig.toml" "./recruiter view/"
-RUN cd "recruiter view" && bun install --frozen-lockfile
+RUN cd "recruiter view" && bun install
 
 # Copy the entire workspace
 COPY . .
+
+# Build frontends
+RUN cd "customer page" && bun run build
+RUN cd "recruiter view" && bun run build
 
 # Convert start.sh line endings to LF and set executable permissions
 RUN tr -d '\r' < scripts/start.sh > scripts/start_lf.sh && \

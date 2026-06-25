@@ -373,8 +373,14 @@ function UploadCvPage() {
         education: (parsedData.education || []).map((edu: any) => ({ ...edu, _key: generateId() })),
         projects: (parsedData.projects || []).map((proj: any) => ({ ...proj, _key: generateId() })),
         certifications: (parsedData.certifications || []).map((cert: any) => ({ ...cert, _key: generateId() })),
-        achievements: (parsedData.achievements || []).map((ach: string) => ({ _key: generateId(), value: ach })),
-        awards: (parsedData.awards || []).map((aw: string) => ({ _key: generateId(), value: aw })),
+        achievements: (parsedData.achievements || []).map((ach: any) => ({ 
+          _key: generateId(), 
+          value: typeof ach === 'string' ? ach : (ach.title || ach.name || ach.achievement || JSON.stringify(ach))
+        })),
+        awards: (parsedData.awards || []).map((aw: any) => ({ 
+          _key: generateId(), 
+          value: typeof aw === 'string' ? aw : (aw.title || aw.name || aw.award || JSON.stringify(aw))
+        })),
         custom_fields: {
           ...emptySchema.custom_fields,
           ...(parsedData.custom_fields || {}),
@@ -1248,6 +1254,125 @@ function UploadCvPage() {
                 {formData.education.length === 0 && (
                   <p className="text-xs text-muted-foreground text-center py-4">No education details added.</p>
                 )}
+              </div>
+            </Card>
+
+            {/* Certifications */}
+            <Card className="p-6">
+              <div className="mb-4 pb-2 border-b border-border flex items-center justify-between">
+                <h2 className="text-base font-semibold tracking-tight">Certifications</h2>
+                <Button type="button" variant="outline" size="sm" onClick={addCertification}>
+                  <Plus className="h-3.5 w-3.5 mr-1" /> Add Certificate
+                </Button>
+              </div>
+              <div className="space-y-6">
+                {formData.certifications.map((cert, idx) => (
+                  <div key={cert._key || idx} className="p-4 rounded-xl border border-border bg-muted/10 relative space-y-4">
+                    <button
+                      type="button"
+                      onClick={() => removeCertification(idx)}
+                      className="absolute right-3 top-3 text-muted-foreground hover:text-destructive"
+                    >
+                      <Trash className="h-4 w-4" />
+                    </button>
+                    <div className="grid gap-4 sm:grid-cols-3">
+                      <FormField
+                        id={`cert-name-${idx}`}
+                        label="Certification Name"
+                        required
+                        value={cert.name}
+                        onChange={(e) => updateCertification(idx, "name", e.target.value)}
+                      />
+                      <FormField
+                        id={`cert-issuer-${idx}`}
+                        label="Issuing Organization"
+                        value={cert.issuer}
+                        onChange={(e) => updateCertification(idx, "issuer", e.target.value)}
+                      />
+                      <FormField
+                        id={`cert-date-${idx}`}
+                        label="Issue Date"
+                        placeholder="YYYY-MM"
+                        value={cert.issue_date}
+                        onChange={(e) => updateCertification(idx, "issue_date", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                ))}
+                {formData.certifications.length === 0 && (
+                  <p className="text-xs text-muted-foreground text-center py-4">No certifications added.</p>
+                )}
+              </div>
+            </Card>
+
+            {/* Achievements & Awards */}
+            <Card className="p-6">
+              <div className="mb-4 pb-2 border-b border-border flex items-center justify-between">
+                <h2 className="text-base font-semibold tracking-tight">Achievements & Awards</h2>
+                <div className="flex gap-2">
+                  <Button type="button" variant="outline" size="sm" onClick={addAchievement}>
+                    <Plus className="h-3.5 w-3.5 mr-1" /> Add Achievement
+                  </Button>
+                  <Button type="button" variant="outline" size="sm" onClick={addAward}>
+                    <Plus className="h-3.5 w-3.5 mr-1" /> Add Award
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-sm font-semibold mb-3">Achievements</h3>
+                  <div className="space-y-3">
+                    {formData.achievements.map((ach, idx) => (
+                      <div key={ach._key || idx} className="flex gap-2">
+                        <FormField
+                          id={`ach-${idx}`}
+                          className="flex-1"
+                          value={ach.value}
+                          onChange={(e) => updateAchievement(idx, e.target.value)}
+                          placeholder="e.g. Employee of the Year 2023"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeAchievement(idx)}
+                          className="mt-8 text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))}
+                    {formData.achievements.length === 0 && (
+                      <p className="text-xs text-muted-foreground text-center py-4">No achievements added.</p>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-semibold mb-3">Awards</h3>
+                  <div className="space-y-3">
+                    {formData.awards.map((aw, idx) => (
+                      <div key={aw._key || idx} className="flex gap-2">
+                        <FormField
+                          id={`aw-${idx}`}
+                          className="flex-1"
+                          value={aw.value}
+                          onChange={(e) => updateAward(idx, e.target.value)}
+                          placeholder="e.g. Best Developer Award"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeAward(idx)}
+                          className="mt-8 text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))}
+                    {formData.awards.length === 0 && (
+                      <p className="text-xs text-muted-foreground text-center py-4">No awards added.</p>
+                    )}
+                  </div>
+                </div>
               </div>
             </Card>
 

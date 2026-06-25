@@ -65,7 +65,7 @@ export function CreateJobModal() {
       return;
     }
     try {
-      await createJob({
+      const newJobId = await createJob({
         title: title.trim(),
         department: finalDept,
         location: location.trim() || "Kathmandu",
@@ -74,6 +74,7 @@ export function CreateJobModal() {
         skills: skillsInput.split(",").map((s) => s.trim()).filter(Boolean),
       });
       close();
+      navigate({ to: "/candidates", search: { jobId: newJobId } });
     } catch (err: any) {
       alert(err.message || "Failed to create job");
     }
